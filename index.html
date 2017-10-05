@@ -34,92 +34,96 @@ var cursors;
 var stars;
 var score = 0;
 var scoreText;
+var totalVillians = 20;
 
 function create() {
 
-    // enable Arcade Physics system
-    game.physics.startSystem(Phaser.Physics.ARCADE);
+  // enable Arcade Physics system
+  game.physics.startSystem(Phaser.Physics.ARCADE);
 
-    // A simple background for our game
-    // game.add.sprite(0, -600, 'sky');
-    game.add.tileSprite(0, 0, 800, 600, 'sky');
-    // game.world.setBounds(0, 0, 800, 600);
+  // A simple background for our game
+  // game.add.sprite(0, -600, 'sky');
+  game.add.tileSprite(0, 0, 800, 600, 'sky');
+  // game.world.setBounds(0, 0, 800, 600);
 
-    // The platforms group contains the ground and the 2 ledges we can jump on
-    platforms = game.add.group();
+  // The platforms group contains the ground and the 2 ledges we can jump on
+  platforms = game.add.group();
 
-    //  We will enable physics for any object that is created in this group
-    platforms.enableBody = true;
+  //  We will enable physics for any object that is created in this group
+  platforms.enableBody = true;
 
-    // Here we create the ground.
-    var ground = platforms.create(0, game.world.height - 64, 'ground');
+  // Here we create the ground.
+  var ground = platforms.create(0, game.world.height - 64, 'ground');
 
-    // Scale the ground to fit the width of the game (the original sprite is 400x32 in size)
-    ground.scale.setTo(2, 2);
+  // Scale the ground to fit the width of the game (the original sprite is 400x32 in size)
+  ground.scale.setTo(2, 2);
 
-    //  This stops the ground from falling away when you jump on it
-    ground.body.immovable = true;
+  //  This stops the ground from falling away when you jump on it
+  ground.body.immovable = true;
 
-    //  create ledges
-    var ledge = platforms.create(400, 400, 'ground');
-    ledge.body.immovable = true;
+  //  create ledges
+  var ledge = platforms.create(400, 400, 'ground');
+  ledge.body.immovable = true;
 
-    ledge = platforms.create(-150, 250, 'ground');
-    ledge.body.immovable = true;
+  ledge = platforms.create(-150, 250, 'ground');
+  ledge.body.immovable = true;
 
-    ledge = platforms.create(150, 50, 'ground');
-    ledge.body.immovable = true;
+  ledge = platforms.create(150, 50, 'ground');
+  ledge.body.immovable = true;
 
-    // PLAYER SETTINGs
-    // 
-    // The player and its settings
-    player = game.add.sprite(48, game.world.height - 160, 'dude');
-    // enable physics on the player
-    game.physics.arcade.enable(player);
-    // Player physics properties. Give the little guy a slight bounce.
-    player.body.bounce.y = 0.2;
-    player.body.gravity.y = 300;
-    // player.body.collideWorldBounds = true;
-    //  Our two animations, walking left and right.
-    player.animations.add('left', [0, 1, 2, 3], 5, true);
-    player.animations.add('right', [5, 6, 7, 8], 5, true);
+  // PLAYER SETTINGs
+  // 
+  // The player and its settings
+  player = game.add.sprite(48, game.world.height - 160, 'dude');
+  // enable physics on the player
+  game.physics.arcade.enable(player);
+  // Player physics properties. Give the little guy a slight bounce.
+  player.body.bounce.y = 0.2;
+  player.body.gravity.y = 300;
+  // player.body.collideWorldBounds = true;
+  //  Our two animations, walking left and right.
+  player.animations.add('left', [0, 1, 2, 3], 5, true);
+  player.animations.add('right', [5, 6, 7, 8], 5, true);
 
 
-    // BAD GUYS
-    // 
-    // 
-    villian = game.add.sprite(32, game.world.height - 400, 'baddie');
-    game.physics.arcade.enable(villian);
-    villian.body.gravity.y = 300;
+  // BAD GUYS
+  // 
+  // 
+  // villian = game.add.sprite(32, game.world.height - 400, 'baddie');
+  // game.physics.arcade.enable(villian);
+  // villian.body.gravity.y = 300;
 
-    // STARS
-    // 
-    //  Finally some stars to collect
-    // stars = game.add.group();
+  buildVillians();
+  
 
-    //  We will enable physics for any star that is created in this group
-    // stars.enableBody = true;
+  // STARS
+  // 
+  //  Finally some stars to collect
+  // stars = game.add.group();
 
-    //  Here we'll create 12 of them evenly spaced apart
-    // for (var i = 0; i < 12; i++)
-    // {
-    //     //  Create a star inside of the 'stars' group
-    //     var star = stars.create(i * 70, 0, 'star');
+  //  We will enable physics for any star that is created in this group
+  // stars.enableBody = true;
 
-    //     //  Let gravity do its thing
-    //     star.body.gravity.y = 300;
+  //  Here we'll create 12 of them evenly spaced apart
+  // for (var i = 0; i < 12; i++)
+  // {
+  //     //  Create a star inside of the 'stars' group
+  //     var star = stars.create(i * 70, 0, 'star');
 
-    //     //  This just gives each star a slightly random bounce value
-    //     star.body.bounce.y = 0.7 + Math.random() * 0.2;
-    // }
+  //     //  Let gravity do its thing
+  //     star.body.gravity.y = 300;
 
-    // //  The score
-    // scoreText = game.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' });
+  //     //  This just gives each star a slightly random bounce value
+  //     star.body.bounce.y = 0.7 + Math.random() * 0.2;
+  // }
 
-    //  Our controls.
-    cursors = game.input.keyboard.createCursorKeys();
-    game.camera.follow(player);
-    game.camera.deadzone = new Phaser.Rectangle(100, 100, 600, 400);
+  // //  The score
+  // scoreText = game.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' });
+
+  //  Our controls.
+  cursors = game.input.keyboard.createCursorKeys();
+  game.camera.follow(player);
+  // game.camera.deadzone = new Phaser.Rectangle(100, 100, 600, 400);
     
 }
 
@@ -168,13 +172,53 @@ function update() {
 }
 
 function render() {
-    var zone = game.camera.deadzone;
+    // var zone = game.camera.deadzone;
 
-    game.context.fillStyle = 'rgba(255,0,0,0.6)';
-    game.context.fillRect(zone.x, zone.y, zone.width, zone.height);
+    // game.context.fillStyle = 'rgba(255,0,0,0.6)';
+    // game.context.fillRect(zone.x, zone.y, zone.width, zone.height);
 
-    game.debug.cameraInfo(game.camera, 32, 32);
-    game.debug.spriteCoords(player, 32, 500);
+    // game.debug.cameraInfo(game.camera, 32, 32);
+    // game.debug.spriteCoords(player, 32, 500);
+}
+
+function buildVillians() {
+  console.log('buildVillians Called')
+  var villianGroup = game.add.group();
+  villianGroup.enableBody = true;
+  for(var i=0; i<totalVillians; i++) {
+      var b = villianGroup.create(game.rnd.integerInRange(-10, game.world.width-50), game.rnd.integerInRange(game.world.height-180, game.world.height-60), 'baddie');
+      b.anchor.setTo(0.5, 0.5);
+      b.body.moves = false;
+      b.animations.add('Rest', game.math.numberArray(1,58));
+      b.animations.add('Walk', game.math.numberArray(68,107));
+      b.animations.play('Rest', 24, true);
+      assignVillianMovement(b);
+  }
+}
+
+function assignVillianMovement(b) {
+  console.log('assignVillianMovement Called') 
+  bposition = Math.floor(game.rnd.realInRange(50, game.world.width-50));
+  bdelay = game.rnd.integerInRange(2000, 6000);
+  if(bposition < b.x){
+      b.scale.x = 1;
+  }else{
+      b.scale.x = -1;
+  }
+  t = game.add.tween(b).to({x:bposition}, 3500, Phaser.Easing.Quadratic.InOut, true, bdelay);
+  t.onStart.add(startVillian, this);
+  t.onComplete.add(stopVillian, this);
+}
+
+function startVillian(b) {
+  b.animations.stop('Rest');
+  b.animations.play('Walk', 24, true);
+}
+
+function stopVillian(b) {
+  b.animations.stop('Walk');
+  b.animations.play('Rest', 24, true);
+  assignVillianMovement(b);
 }
 
 function collectStar (player, star) {
