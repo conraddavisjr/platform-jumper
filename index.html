@@ -87,12 +87,7 @@ function create() {
 
 
   // BAD GUYS
-  // 
-  // 
-  // villian = game.add.sprite(32, game.world.height - 400, 'baddie');
-  // game.physics.arcade.enable(villian);
-  // villian.body.gravity.y = 300;
-
+  //
   buildVillians();
   
 
@@ -182,43 +177,62 @@ function render() {
 }
 
 function buildVillians() {
-  console.log('buildVillians Called')
-  var villianGroup = game.add.group();
-  villianGroup.enableBody = true;
-  for(var i=0; i<totalVillians; i++) {
-      var b = villianGroup.create(game.rnd.integerInRange(-10, game.world.width-50), game.rnd.integerInRange(game.world.height-180, game.world.height-60), 'baddie');
-      b.anchor.setTo(0.5, 0.5);
-      b.body.moves = false;
-      b.animations.add('Rest', game.math.numberArray(1,58));
-      b.animations.add('Walk', game.math.numberArray(68,107));
-      b.animations.play('Rest', 24, true);
-      assignVillianMovement(b);
-  }
+  villian = game.add.sprite(32, game.world.height - 400, 'baddie');
+  game.physics.arcade.enable(villian);
+  villian.body.gravity.y = 300;
+
+  // sprite = game.add.sprite(game.world.centerX, -200, 'baddie');
+  // sprite.anchor.set(0.5);
+  // //  It will end up at the middle of the game, as it's tweening TO the value given
+  // game.add.tween(sprite).to( { y: game.world.centerY }, 4000, Phaser.Easing.Bounce.Out, true)
+  // .onComplete.add(assignVillianMovement, this);
+  // var villianGroup = game.add.group();
+  // for(var i=0; i<totalVillians; i++) {
+      // b.anchor.setTo(9.5, 0.5);
+      // b.body.moves = false;
+      // b.animations.add('Rest', game.math.numberArray(1,58));
+      // b.animations.add('Walk', game.math.numberArray(0,150));
+      // b.animations.play('Walk', 24, true);
+      assignVillianMovement(villian);
+  // }
 }
 
 function assignVillianMovement(b) {
-  console.log('assignVillianMovement Called') 
-  bposition = Math.floor(game.rnd.realInRange(50, game.world.width-50));
-  bdelay = game.rnd.integerInRange(2000, 6000);
-  if(bposition < b.x){
-      b.scale.x = 1;
-  }else{
-      b.scale.x = -1;
-  }
-  t = game.add.tween(b).to({x:bposition}, 3500, Phaser.Easing.Quadratic.InOut, true, bdelay);
-  t.onStart.add(startVillian, this);
-  t.onComplete.add(stopVillian, this);
+  // bposition = Math.floor(game.rnd.realInRange(0, 50));
+  // if(bposition < b.x){
+  // }else{
+  //     b.scale.x = -1;
+  // }
+  b.scale.x = -1;
+  game.add.tween(b).to({x:200}, 3500, Phaser.Easing.Quadratic.InOut, true)
+  .onComplete.add(villianToLeft, this);
+  // villianToRight(this)
+
+  // if (slime.body.velocity.x > 0) {
+  //     slime.animations.play('right');
+  // } else {
+  //     slime.animations.play('left');
+  // }
+  // t.onStart.add(villianToRight, this);
+  // t.onComplete.add(villianToLeft, this);
 }
 
-function startVillian(b) {
-  b.animations.stop('Rest');
+function villianToRight(b) {
+  // b.animations.stop('Rest');
   b.animations.play('Walk', 24, true);
+  game.add.tween(b).to({x:200}, 3500, Phaser.Easing.Quadratic.InOut, true)
+  .onComplete.add(villianToLeft, this);
+
 }
 
-function stopVillian(b) {
-  b.animations.stop('Walk');
-  b.animations.play('Rest', 24, true);
-  assignVillianMovement(b);
+function villianToLeft(b) {
+  console.log('villianToLeft Called')
+  // b.animations.stop('Rest');
+  // b.animations.play('Walk', 24, true);
+  game.add.tween(b).to({x:0}, 3500, Phaser.Easing.Quadratic.InOut, true)
+  .onComplete.add(villianToRight, this);
+  // game.add.tween(b).to({x:0}, 3500, Phaser.Easing.Quadratic.InOut, true);
+  // assignVillianMovement(b);
 }
 
 function collectStar (player, star) {
