@@ -65,6 +65,9 @@ function create() {
     ledge = platforms.create(-150, 250, 'ground');
     ledge.body.immovable = true;
 
+    ledge = platforms.create(150, 50, 'ground');
+    ledge.body.immovable = true;
+
     // PLAYER SETTINGs
     // 
     // The player and its settings
@@ -88,42 +91,47 @@ function create() {
     villan.body.gravity.y = 300;
     villan.body.collideWorldBounds = false;
 
+    // STARS
+    // 
     //  Finally some stars to collect
-    stars = game.add.group();
+    // stars = game.add.group();
 
     //  We will enable physics for any star that is created in this group
-    stars.enableBody = true;
+    // stars.enableBody = true;
 
     //  Here we'll create 12 of them evenly spaced apart
-    for (var i = 0; i < 12; i++)
-    {
-        //  Create a star inside of the 'stars' group
-        var star = stars.create(i * 70, 0, 'star');
+    // for (var i = 0; i < 12; i++)
+    // {
+    //     //  Create a star inside of the 'stars' group
+    //     var star = stars.create(i * 70, 0, 'star');
 
-        //  Let gravity do its thing
-        star.body.gravity.y = 300;
+    //     //  Let gravity do its thing
+    //     star.body.gravity.y = 300;
 
-        //  This just gives each star a slightly random bounce value
-        star.body.bounce.y = 0.7 + Math.random() * 0.2;
-    }
+    //     //  This just gives each star a slightly random bounce value
+    //     star.body.bounce.y = 0.7 + Math.random() * 0.2;
+    // }
 
-    //  The score
-    scoreText = game.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' });
+    // //  The score
+    // scoreText = game.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' });
 
     //  Our controls.
     cursors = game.input.keyboard.createCursorKeys();
+    game.camera.follow(player);
     
 }
 
 function update() {
 
-    //  CImplement collision
+    //  Implement collision
     game.physics.arcade.collide(player, platforms);
     game.physics.arcade.collide(villan, platforms);
-    game.physics.arcade.collide(stars, platforms);
+    // game.physics.arcade.collide(stars, platforms);
 
     //  Checks to see if the player overlaps with any of the stars, if he does call the collectStar function
-    game.physics.arcade.overlap(player, stars, collectStar, null, this);
+    // game.physics.arcade.overlap(player, stars, collectStar, null, this);
+    //  Checks to see if the player overlaps with any of the villans, if they do call the touchVillan function
+    game.physics.arcade.overlap(player, villan, touchVillan, null, this);
 
     //  Reset the players velocity (movement)
     player.body.velocity.x = 0;
@@ -167,6 +175,11 @@ function collectStar (player, star) {
     score += 10;
     scoreText.text = 'Score: ' + score;
 
+}
+
+function touchVillan (player, villan) {
+    // Removes the star from the screen
+    villan.kill();
 }
 
 </script>
