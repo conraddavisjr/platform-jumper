@@ -22,10 +22,12 @@ function preload() {
     game.load.image('ground', 'assets/platform.png');
     game.load.image('star', 'assets/star.png');
     game.load.spritesheet('dude', 'assets/dude.png', 32, 48);
+    game.load.spritesheet('baddie', 'assets/baddie.png', 32, 32);
 
 }
 
 var player;
+var villan;
 var platforms;
 var cursors;
 
@@ -56,27 +58,35 @@ function create() {
     //  This stops the ground from falling away when you jump on it
     ground.body.immovable = true;
 
-    //  Now let's create two ledges
+    //  create ledges
     var ledge = platforms.create(400, 400, 'ground');
     ledge.body.immovable = true;
 
     ledge = platforms.create(-150, 250, 'ground');
     ledge.body.immovable = true;
 
+    // PLAYER SETTINGs
+    // 
     // The player and its settings
-    player = game.add.sprite(37, game.world.height - 160, 'dude');
-
-    // We need to enable physics on the player
+    player = game.add.sprite(48, game.world.height - 160, 'dude');
+    // enable physics on the player
     game.physics.arcade.enable(player);
-
     // Player physics properties. Give the little guy a slight bounce.
     player.body.bounce.y = 0.2;
     player.body.gravity.y = 300;
     player.body.collideWorldBounds = false;
-
     //  Our two animations, walking left and right.
     player.animations.add('left', [0, 1, 2, 3], 5, true);
     player.animations.add('right', [5, 6, 7, 8], 5, true);
+
+
+    // BAD GUYS
+    // 
+    // 
+    villan = game.add.sprite(32, game.world.height - 400, 'baddie');
+    game.physics.arcade.enable(villan);
+    villan.body.gravity.y = 300;
+    villan.body.collideWorldBounds = false;
 
     //  Finally some stars to collect
     stars = game.add.group();
@@ -107,8 +117,9 @@ function create() {
 
 function update() {
 
-    //  Collide the player and the stars with the platforms
+    //  CImplement collision
     game.physics.arcade.collide(player, platforms);
+    game.physics.arcade.collide(villan, platforms);
     game.physics.arcade.collide(stars, platforms);
 
     //  Checks to see if the player overlaps with any of the stars, if he does call the collectStar function
