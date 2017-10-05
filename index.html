@@ -88,7 +88,7 @@ function create() {
 
   // BAD GUYS
   //
-  buildVillians();
+  buildVillian();
   
 
   // STARS
@@ -176,59 +176,27 @@ function render() {
     // game.debug.spriteCoords(player, 32, 500);
 }
 
-function buildVillians() {
+function buildVillian() {
   villian = game.add.sprite(32, game.world.height - 400, 'baddie');
   game.physics.arcade.enable(villian);
   villian.body.gravity.y = 300;
 
-  // sprite = game.add.sprite(game.world.centerX, -200, 'baddie');
-  // sprite.anchor.set(0.5);
-  // //  It will end up at the middle of the game, as it's tweening TO the value given
-  // game.add.tween(sprite).to( { y: game.world.centerY }, 4000, Phaser.Easing.Bounce.Out, true)
-  // .onComplete.add(assignVillianMovement, this);
-  // var villianGroup = game.add.group();
-  // for(var i=0; i<totalVillians; i++) {
-      // b.anchor.setTo(9.5, 0.5);
-      // b.body.moves = false;
-      // b.animations.add('Rest', game.math.numberArray(1,58));
-      // b.animations.add('Walk', game.math.numberArray(0,150));
-      // b.animations.play('Walk', 24, true);
-      assignVillianMovement(villian);
-  // }
-}
+  villian.animations.add('right', [1, 0], 3, true);
+  villian.animations.add('left', [2, 3], 3, true);
 
-function assignVillianMovement(b) {
-  // bposition = Math.floor(game.rnd.realInRange(0, 50));
-  // if(bposition < b.x){
-  // }else{
-  //     b.scale.x = -1;
-  // }
-  b.scale.x = -1;
-  game.add.tween(b).to({x:200}, 3500, Phaser.Easing.Quadratic.InOut, true)
-  .onComplete.add(villianToLeft, this);
-  // villianToRight(this)
-
-  // if (slime.body.velocity.x > 0) {
-  //     slime.animations.play('right');
-  // } else {
-  //     slime.animations.play('left');
-  // }
-  // t.onStart.add(villianToRight, this);
-  // t.onComplete.add(villianToLeft, this);
+  villian.scale.x = -1;
+  villianToRight(villian);
 }
 
 function villianToRight(b) {
-  // b.animations.stop('Rest');
-  b.animations.play('Walk', 24, true);
-  game.add.tween(b).to({x:200}, 3500, Phaser.Easing.Quadratic.InOut, true)
+  b.animations.play('right');
+  game.add.tween(b).to({x:250}, 3500, Phaser.Easing.Quadratic.InOut, true)
   .onComplete.add(villianToLeft, this);
 
 }
 
 function villianToLeft(b) {
-  console.log('villianToLeft Called')
-  // b.animations.stop('Rest');
-  // b.animations.play('Walk', 24, true);
+  b.animations.play('left');
   game.add.tween(b).to({x:0}, 3500, Phaser.Easing.Quadratic.InOut, true)
   .onComplete.add(villianToRight, this);
   // game.add.tween(b).to({x:0}, 3500, Phaser.Easing.Quadratic.InOut, true);
